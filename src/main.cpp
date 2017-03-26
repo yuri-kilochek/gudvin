@@ -1,30 +1,44 @@
-#include <GLFW/glfw3.h>
-
-#include <glm/vec4.hpp>
-#include <glm/mat4x4.hpp>
-
+#include <stdexcept>
 #include <iostream>
 
-int main() {
-    glfwInit();
+#include <GLFW/glfw3.h>
+#include <glm/glm.hpp>
 
-    glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-    GLFWwindow* window = glfwCreateWindow(800, 600, "Vulkan window", nullptr, nullptr);
+#include "DEFER.hpp"
 
-    uint32_t extensionCount = 0;
-    vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, nullptr);
+namespace gudvin {
+    void main()
+    {
+        if (!glfwInit()) {
+            throw new std::runtime_error("glfwInit() failed");
+        }
+        GUDVIN_DEFER(glfwTerminate());
 
-    std::cout << extensionCount << " extensions supported" << std::endl;
+        glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+        auto const window = glfwCreateWindow(
+            800, 600, "Vulkan window", nullptr, nullptr);
+        if (!window) {
+            throw new std::runtime_error("glfwCreateWindow() failed");
+        }
+        GUDVIN_DEFER(glfwDestroyWindow(window));
 
-    glm::mat4 matrix;
-    glm::vec4 vec;
-    auto test = matrix * vec;
+        uint32_t extensionCount = 0;
+        vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, nullptr);
 
-    while(!glfwWindowShouldClose(window)) {
-        glfwPollEvents();
+        std::cout << extensionCount << " extensions supported" << std::endl;
+
+        glm::mat4 matrix;
+        glm::vec4 vec;
+        auto test = matrix * vec;
+
+        while(!glfwWindowShouldClose(window)) {
+            glfwPollEvents();
+        }
     }
+} /* namespace gudvin */
 
-    glfwDestroyWindow(window);
-
-    glfwTerminate();
+auto main()
+    -> int
+{
+    gudvin::main();
 }
