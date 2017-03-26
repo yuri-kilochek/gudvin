@@ -9,10 +9,11 @@ add_executable(
 )
 
 find_package(GLM REQUIRED)
+target_compile_definitions(gudvin PRIVATE GLM_FORCE_DEPTH_ZERO_TO_ONE)
 target_include_directories(gudvin PRIVATE ${GLM_INCLUDE_DIRS})
-target_link_libraries(gudvin PRIVATE ${GLM_LIBRARIES})
 
 find_package(GLFW REQUIRED)
+target_compile_definitions(gudvin PRIVATE GLFW_INCLUDE_VULKAN)
 target_include_directories(gudvin PRIVATE ${GLFW_INCLUDE_DIRS})
 target_link_libraries(gudvin PRIVATE ${GLFW_LIBRARIES})
 
