@@ -4,7 +4,7 @@
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 
-#include "DEFER.hpp"
+#include "defer.hxx"
 #include "vk/enumerate_instance_layer_properties.hxx"
 #include "vk/enumerate_instance_extension_properties.hxx"
 #include "vk/instance.hxx"
@@ -38,10 +38,12 @@ namespace gudvin {
             }
         }
 
+
         vk::instance_create_info info;
         //info.enabled_layer_names.emplace("foobaf");
         info.prepare();
-        create(info);
+        auto instance = vk::create_instance(info);
+        GUDVIN_DEFER(vk::destroy_instance(instance));
 
 
         uint32_t extensionCount = 0;

@@ -10,7 +10,6 @@
 #include <string>
 #include <unordered_set>
 #include <vector>
-#include <utility>
 #include <system_error>
 
 namespace gudvin {
@@ -81,86 +80,35 @@ private:
     std::vector<char const*> raw_enabled_extension_names_;
 };
 
-struct instance
-{
-    explicit instance(
-        VkInstance handle,
-        VkAllocationCallbacks const* allocation_callbacks = nullptr)
-    noexcept
-    : handle_(handle)
-    , allocation_callbacks_(allocation_callbacks)
-    {}
-
-    instance(decltype(nullptr) = nullptr) noexcept
-    : instance(VkInstance(VK_NULL_HANDLE))
-    {}
-
-    friend void swap(instance& a, instance& b) noexcept
-    {
-        using std::swap;
-        swap(a.handle_, b.handle_);
-        swap(a.allocation_callbacks_, b.allocation_callbacks_);
-    }
-
-    instance(instance const&) = delete;
-
-    instance(instance&& other) noexcept
-    : instance()
-    { swap(*this, other); }
-
-    auto operator=(instance other) noexcept
-    -> instance&    
-    {
-        swap(*this, other);
-        return *this;
-    }
-
-    ~instance()
-    { vkDestroyInstance(handle_, allocation_callbacks_); }
-
-    operator VkInstance() const noexcept
-    { return handle_; }
-
-    auto reset(
-        VkInstance handle,
-        VkAllocationCallbacks const* allocation_callbacks = nullptr)
-    noexcept
-    -> instance&
-    { return *this = instance(handle, allocation_callbacks); }
-
-    auto reset(decltype(nullptr) = nullptr)
-    noexcept
-    -> instance&
-    { return *this = instance(nullptr); }
-
-private:
-    VkInstance handle_;
-    VkAllocationCallbacks const* allocation_callbacks_;
-};
-
-inline auto create(
+inline auto create_instance(
     std::error_code& ec,
     VkInstanceCreateInfo const& info,
     VkAllocationCallbacks const* allocation_callbacks = nullptr)
 noexcept
--> instance
+-> VkInstance
 {
-    VkInstance handle;
-    ec = vkCreateInstance(&info, allocation_callbacks, &handle);
-    if (ec) { return nullptr; }
-    return instance(handle, allocation_callbacks);
+    VkInstance instance;
+    ec = vkCreateInstance(&info, allocation_callbacks, &instance);
+    if (ec) { instance = VK_NULL_HANDLE; }
+    return instance;
 }
 
-inline auto create(
+inline auto create_instance(
     VkInstanceCreateInfo const& info,
     VkAllocationCallbacks const* allocation_callbacks = nullptr)
--> instance
+-> VkInstance
 {
     std::error_code ec;
-    auto instance = create(ec, info, allocation_callbacks);
+    auto instance = create_instance(ec, info, allocation_callbacks);
     if (ec) { throw std::system_error(ec); }
     return instance;
 }
+
+inline void destroy_instance(
+    VkInstance instance,
+    VkAllocationCallbacks const* allocation_callbacks = nullptr)
+noexcept
+{ vkDestroyInstance(instance, allocation_callbacks); }
 
 ///////////////////////////////////////////////////////////////////////////////
 } // namespace vk
