@@ -63,6 +63,22 @@ inline auto result_category() noexcept
                 return "Format not supported";
             case VK_ERROR_FRAGMENTED_POOL:
                 return "Fragmented pool";
+            case VK_ERROR_SURFACE_LOST_KHR:
+                return "Surface lost";
+            case VK_ERROR_NATIVE_WINDOW_IN_USE_KHR:
+                return "Native window in use";
+            case VK_ERROR_OUT_OF_DATE_KHR:
+                return "Out of date";
+            case VK_ERROR_INCOMPATIBLE_DISPLAY_KHR:
+                return "Incompatible display";
+            case VK_ERROR_VALIDATION_FAILED_EXT:
+                return "Validation failed";
+            case VK_ERROR_INVALID_SHADER_NV:
+                return "Invalid shader";
+            case VK_ERROR_OUT_OF_POOL_MEMORY_KHR:
+                return "Out of pool memory";
+            case VK_ERROR_INVALID_EXTERNAL_HANDLE_KHX:
+                return "Invalid external handle";
             default:
                 return "Unknown error " + std::to_string(result); 
             }
@@ -82,6 +98,14 @@ inline auto result_category() noexcept
             case VK_ERROR_INCOMPATIBLE_DRIVER:
             case VK_ERROR_FORMAT_NOT_SUPPORTED:
                 return std::errc::not_supported;
+            case VK_ERROR_NATIVE_WINDOW_IN_USE_KHR:
+                return std::errc::device_or_resource_busy;
+            case VK_ERROR_INCOMPATIBLE_DISPLAY_KHR:
+                return std::errc::not_supported;
+            case VK_ERROR_OUT_OF_POOL_MEMORY_KHR:
+                return std::errc::not_enough_memory;
+            case VK_ERROR_INVALID_EXTERNAL_HANDLE_KHX:
+                return std::errc::invalid_argument;
             default:
                 return error_category::default_error_condition(result);
             }
