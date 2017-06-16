@@ -4,6 +4,7 @@
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 
+#include "config.hxx"
 #include "defer.hxx"
 #include "vk/enumerate_instance_layer_properties.hxx"
 #include "vk/enumerate_instance_extension_properties.hxx"
@@ -12,6 +13,8 @@
 namespace gudvin {
     void main()
     {
+        std::cout << "gudvin v" << GUDVIN_VERSION_MAJOR << "." << GUDVIN_VERSION_MINOR << "." << GUDVIN_VERSION_PATCH << "\n";
+
         if (!glfwInit()) {
             throw new std::runtime_error("glfwInit() failed");
         }
