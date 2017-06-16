@@ -36,7 +36,7 @@ namespace gudvin {
         for (auto&& layer : vk::enumerate_instance_layer_properties()) {
             std::cout << "\t" << layer.layerName << ": " << layer.description << "\n";
             std::cout << "\t\t" << "layer extensions:" << "\n";
-            for (auto&& extension : vk::enumerate_instance_extension_properties(std::string(layer.layerName))) {
+            for (auto&& extension : vk::enumerate_instance_extension_properties(layer.layerName)) {
                 std::cout << "\t\t\t" << extension.extensionName << "\n";
             }
         }

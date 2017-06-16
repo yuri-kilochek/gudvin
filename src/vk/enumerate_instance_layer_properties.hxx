@@ -1,47 +1,29 @@
-#ifndef GUDVIN_DETAIL_INCLUDE_vk_enumerate_instance_layer_properties
-#define GUDVIN_DETAIL_INCLUDE_vk_enumerate_instance_layer_properties
+#ifndef GUDVIN_INCLUDED_VK_ENUMERATE_INSTANCE_LAYER_PROPERTIES
+#define GUDVIN_INCLUDED_VK_ENUMERATE_INSTANCE_LAYER_PROPERTIES
 
 #include "result.hxx"
 
 #include <vulkan/vulkan.h>
 
-#include <system_error>
 #include <vector>
-#include <new>
+#include <cstdint>
 
-namespace gudvin {
-namespace vk {
+namespace gudvin::vk {
 ///////////////////////////////////////////////////////////////////////////////
 
-inline auto enumerate_instance_layer_properties(std::error_code& ec) noexcept
+inline
+auto enumerate_instance_layer_properties()
 -> std::vector<VkLayerProperties>
 {
-    try {
-        uint32_t itemCount;
-        ec = vkEnumerateInstanceLayerProperties(&itemCount, nullptr);
-        if (ec && ec != VK_INCOMPLETE) { return {}; }
-        std::vector<VkLayerProperties> items(itemCount);
-        ec = vkEnumerateInstanceLayerProperties(&itemCount, items.data());
-        if (ec && ec != VK_INCOMPLETE) { return {}; }
-        items.resize(itemCount);
-        return items;
-    } catch (std::bad_alloc const&) {
-        ec = make_error_code(std::errc::not_enough_memory);
-        return {};
-    }
-}
-
-inline auto enumerate_instance_layer_properties()
--> std::vector<VkLayerProperties>
-{
-    std::error_code ec;
-    auto items = enumerate_instance_layer_properties(ec);
-    if (ec) { throw std::system_error(ec); };
+    std::uint32_t item_count;
+    check(vkEnumerateInstanceLayerProperties(&item_count, nullptr));
+    std::vector<VkLayerProperties> items(item_count);
+    check(vkEnumerateInstanceLayerProperties(&item_count, items.data()));
+    items.resize(item_count);
     return items;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-} // namespace vk
-} // namespace gudvin
+} // gudvin::vk
 
 #endif

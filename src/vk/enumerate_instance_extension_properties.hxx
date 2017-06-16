@@ -1,66 +1,35 @@
-#ifndef GUDVIN_DETAIL_INCLUDE_vk_enumerate_instance_extension_properties
-#define GUDVIN_DETAIL_INCLUDE_vk_enumerate_instance_extension_properties
+#ifndef GUDVIN_INCLUDED_VK_ENUMERATE_INSTANCE_EXTENSION_PROPERTIES
+#define GUDVIN_INCLUDED_VK_ENUMERATE_INSTANCE_EXTENSION_PROPERTIES
 
 #include "result.hxx"
 
 #include <vulkan/vulkan.h>
 
-#include <system_error>
-#include <vector>
-#include <new>
+#include <optional>
 #include <string>
+#include <vector>
+#include <cstdint>
 
-namespace gudvin {
-namespace vk {
+namespace gudvin::vk {
 ///////////////////////////////////////////////////////////////////////////////
 
-inline auto enumerate_instance_extension_properties(
-    std::error_code ec,
-    char const* layer_name = nullptr)
-noexcept
+inline
+auto enumerate_instance_extension_properties(
+    std::optional<std::string> layer_name = std::nullopt)
 -> std::vector<VkExtensionProperties>
 {
-    try {
-        uint32_t itemCount;
-        ec = vkEnumerateInstanceExtensionProperties(
-            layer_name, &itemCount, nullptr);
-        if (ec && ec != VK_INCOMPLETE) { return {}; }
-        std::vector<VkExtensionProperties> items(itemCount);
-        ec = vkEnumerateInstanceExtensionProperties(
-            layer_name, &itemCount, items.data());
-        if (ec && ec != VK_INCOMPLETE) { return {}; }
-        items.resize(itemCount);
-        return items;
-    } catch (std::bad_alloc const&) {
-        ec = make_error_code(std::errc::not_enough_memory);
-        return {};
-    }
-}
-
-inline auto enumerate_instance_extension_properties(
-    char const* layer_name = nullptr)
--> std::vector<VkExtensionProperties>
-{
-    std::error_code ec;
-    auto items = enumerate_instance_extension_properties(ec, layer_name);
-    if (ec) { throw std::system_error(ec); };
+    auto raw_layer_name = layer_name ? layer_name->data() : nullptr;
+    std::uint32_t item_count;
+    check(vkEnumerateInstanceExtensionProperties(
+        raw_layer_name, &item_count, nullptr));
+    std::vector<VkExtensionProperties> items(item_count);
+    check(vkEnumerateInstanceExtensionProperties(
+        raw_layer_name, &item_count, items.data()));
+    items.resize(item_count);
     return items;
 }
 
-inline auto enumerate_instance_extension_properties(
-    std::error_code& ec,
-    std::string const& layer_name)
-noexcept
--> std::vector<VkExtensionProperties>
-{ return enumerate_instance_extension_properties(ec, layer_name.data()); }
-
-inline auto enumerate_instance_extension_properties(
-    std::string const& layer_name)
--> std::vector<VkExtensionProperties>
-{ return enumerate_instance_extension_properties(layer_name.data()); }
-
 ///////////////////////////////////////////////////////////////////////////////
-} // namespace vk
-} // namespace gudvin
+} // gudvin::vk
 
 #endif
