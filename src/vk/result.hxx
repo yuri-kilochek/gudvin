@@ -82,7 +82,8 @@ noexcept
                 case VK_ERROR_INVALID_EXTERNAL_HANDLE_KHX:
                     return "invalid external handle";
                 default:
-                    return "Unknown error " + std::to_string(result); 
+                    throw std::domain_error(
+                        "unknown error code: " + std::to_string(result)); 
             }
         }
 
