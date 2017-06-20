@@ -1,11 +1,11 @@
 #ifndef GUDVIN_INCLUDED_VK_RESULT
 #define GUDVIN_INCLUDED_VK_RESULT
 
-#include <system_error>
-#include <type_traits>
-#include <string>
-
 #include <vulkan/vulkan.h>
+
+#include <system_error>
+#include <stdexcept>
+#include <string>
 
 namespace std {
 ///////////////////////////////////////////////////////////////////////////////
