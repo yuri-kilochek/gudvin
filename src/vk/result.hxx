@@ -133,7 +133,7 @@ noexcept
 -> std::error_condition
 { return {result, gudvin::vk::result_category()}; }
 
-namespace gudvin::vk {
+namespace gudvin {
 ///////////////////////////////////////////////////////////////////////////////
 
 inline
