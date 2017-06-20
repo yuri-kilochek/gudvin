@@ -36,7 +36,7 @@ noexcept
         { return "vulkan"; }
 
         auto message(int result)
-            const
+        const
         -> std::string
         override final
         {
