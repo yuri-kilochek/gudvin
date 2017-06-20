@@ -42,45 +42,45 @@ noexcept
         {
             switch (result) {
                 case VK_ERROR_OUT_OF_HOST_MEMORY:
-                    return "Out of host memory";
+                    return "out of host memory";
                 case VK_ERROR_OUT_OF_DEVICE_MEMORY:
-                    return "Out of device memory";
+                    return "out of device memory";
                 case VK_ERROR_INITIALIZATION_FAILED:
-                    return "Initialization failed";
+                    return "initialization failed";
                 case VK_ERROR_DEVICE_LOST:
-                    return "Device lost";
+                    return "device lost";
                 case VK_ERROR_MEMORY_MAP_FAILED:
-                    return "Memory map failed";
+                    return "memory map failed";
                 case VK_ERROR_LAYER_NOT_PRESENT:
-                    return "Layer not present";
+                    return "layer not present";
                 case VK_ERROR_EXTENSION_NOT_PRESENT:
-                    return "Extension not present";
+                    return "extension not present";
                 case VK_ERROR_FEATURE_NOT_PRESENT:
-                    return "Feature not present";
+                    return "feature not present";
                 case VK_ERROR_INCOMPATIBLE_DRIVER:
-                    return "Incompatible driver";
+                    return "incompatible driver";
                 case VK_ERROR_TOO_MANY_OBJECTS:
-                    return "Too many objects";
+                    return "too many objects";
                 case VK_ERROR_FORMAT_NOT_SUPPORTED:
-                    return "Format not supported";
+                    return "format not supported";
                 case VK_ERROR_FRAGMENTED_POOL:
-                    return "Fragmented pool";
+                    return "fragmented pool";
                 case VK_ERROR_SURFACE_LOST_KHR:
-                    return "Surface lost";
+                    return "surface lost";
                 case VK_ERROR_NATIVE_WINDOW_IN_USE_KHR:
-                    return "Native window in use";
+                    return "native window in use";
                 case VK_ERROR_OUT_OF_DATE_KHR:
-                    return "Out of date";
+                    return "out of date";
                 case VK_ERROR_INCOMPATIBLE_DISPLAY_KHR:
-                    return "Incompatible display";
+                    return "incompatible display";
                 case VK_ERROR_VALIDATION_FAILED_EXT:
-                    return "Validation failed";
+                    return "validation failed";
                 case VK_ERROR_INVALID_SHADER_NV:
-                    return "Invalid shader";
+                    return "invalid shader";
                 case VK_ERROR_OUT_OF_POOL_MEMORY_KHR:
-                    return "Out of pool memory";
+                    return "out of pool memory";
                 case VK_ERROR_INVALID_EXTERNAL_HANDLE_KHX:
-                    return "Invalid external handle";
+                    return "invalid external handle";
                 default:
                     return "Unknown error " + std::to_string(result); 
             }
