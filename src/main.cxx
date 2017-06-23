@@ -5,11 +5,11 @@
 #include <glm/glm.hpp>
 
 #include "config.hxx"
-#include "defer.hxx"
 #include "vk/enumerate_instance_layer_properties.hxx"
 #include "vk/enumerate_instance_extension_properties.hxx"
 #include "vk/instance.hxx"
 #include "vk/handle.hxx"
+#include "scope_guard.hxx"
 
 namespace gudvin {
     void main()
@@ -19,7 +19,7 @@ namespace gudvin {
         if (!glfwInit()) {
             throw new std::runtime_error("glfwInit() failed");
         }
-        GUDVIN_DEFER(glfwTerminate());
+        scope_guard glfw_guard = [&]{ glfwTerminate(); };
 
         glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
         auto const window = glfwCreateWindow(
@@ -27,7 +27,7 @@ namespace gudvin {
         if (!window) {
             throw new std::runtime_error("glfwCreateWindow() failed");
         }
-        GUDVIN_DEFER(glfwDestroyWindow(window));
+        scope_guard window_guard = [&]{ glfwDestroyWindow(window); };
 
         std::cout << "core extensions:" << "\n";
         for (auto&& extension : vk::enumerate_instance_extension_properties()) {
@@ -42,20 +42,13 @@ namespace gudvin {
             }
         }
 
-        vk::handle<VkDevice> dev;
-        dev.reset();
-
-        vk::instance_create_info info;
+        VkInstanceCreateInfo info{VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO};
         //info.enabled_layer_names.emplace("foobaf");
-        info.prepare();
-        auto instance = vk::create_instance(info);
-        GUDVIN_DEFER(vk::destroy_instance(instance));
-
-
-        uint32_t extensionCount = 0;
-        vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, nullptr);
-
-        std::cout << extensionCount << " extensions supported" << std::endl;
+        vk::handle<VkInstance> instance;
+        vk::create_instance(&info, nullptr, &instance);
+        scope_guard instance_guard = [&]{
+            vk::destroy_instance(instance, nullptr);
+        };
 
         glm::mat4 matrix;
         glm::vec4 vec;
