@@ -9,6 +9,7 @@
 #include "vk/enumerate_instance_layer_properties.hxx"
 #include "vk/enumerate_instance_extension_properties.hxx"
 #include "vk/instance.hxx"
+#include "vk/handle.hxx"
 
 namespace gudvin {
     void main()
@@ -41,6 +42,8 @@ namespace gudvin {
             }
         }
 
+        vk::handle<VkDevice> dev;
+        dev.reset();
 
         vk::instance_create_info info;
         //info.enabled_layer_names.emplace("foobaf");
