@@ -16,6 +16,16 @@ namespace detail::scope_guard {
         : fn_(std::forward<Fn>(fn)), args_(std::forward<Args>(args)...)
         {}
 
+        base(base const&) = delete;
+        auto operator=(base const&)
+        -> base&
+        = delete;
+
+        base(base&&) = delete;
+        auto operator=(base&&)
+        -> base&
+        = delete;
+
     protected:
         void invoke()
         { std::apply(std::forward<Fn>(fn_), std::move(args_)); }
