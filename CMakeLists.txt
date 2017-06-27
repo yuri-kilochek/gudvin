@@ -1,84 +1,51 @@
 cmake_minimum_required(VERSION 3.8)
 
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
-
 project(gudvin VERSION 0.0.0)
 
-add_executable(
-    ${PROJECT_NAME}
-    
+add_executable(program
     src/main.cxx
 )
-set_target_properties(
-    ${PROJECT_NAME} PROPERTIES
+
+set_target_properties(program PROPERTIES
+    OUTPUT_NAME ${PROJECT_NAME}
+    DEBUG_POSTFIX _d
+
+    VERSION ${PROJECT_VERSION}
 
     CXX_STANDARD 17
     CXX_STANDARD_REQUIRED YES
     CXX_EXTENSIONS OFF
 )
+
 if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
-    target_compile_options(
-        ${PROJECT_NAME} PRIVATE
-        
+    target_compile_options(program PRIVATE
         -Wall
         -pedantic
         -Wfatal-errors
     )
 elseif(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
-    target_compile_options(
-        ${PROJECT_NAME} PRIVATE
+    target_compile_options(program PRIVATE
         /Wall
     )
 endif()
-configure_file(
-    "${CMAKE_SOURCE_DIR}/src/config.hxx.in"
-    "${CMAKE_BINARY_DIR}/src/config.hxx"
-)
-target_include_directories(
-    ${PROJECT_NAME} SYSTEM PRIVATE
-    "${CMAKE_BINARY_DIR}/src"
-)
+
+configure_file("src/config.hxx.in" "src/config.hxx")
+target_include_directories(program PRIVATE "${CMAKE_BINARY_DIR}/src")
 
 find_package(Boost REQUIRED)
-target_include_directories(
-    ${PROJECT_NAME} SYSTEM PRIVATE
-    ${Boost_INCLUDE_DIRS}
-)
-target_link_libraries(
-    ${PROJECT_NAME} PRIVATE
-    ${Boost_LIBRARIES}
-)
+target_link_libraries(program Boost::boost)
 
-find_package(GLM REQUIRED)
-target_compile_definitions(
-    ${PROJECT_NAME} PRIVATE
+find_package(glm REQUIRED)
+target_compile_definitions(program PUBLIC
     GLM_FORCE_DEPTH_ZERO_TO_ONE
 )
-target_include_directories(
-    ${PROJECT_NAME} SYSTEM PRIVATE
-    ${GLM_INCLUDE_DIRS}
-)
+target_link_libraries(program glm)
 
-find_package(GLFW REQUIRED)
-target_compile_definitions(
-    ${PROJECT_NAME} PRIVATE
+find_package(glfw3 REQUIRED)
+target_compile_definitions(program PUBLIC
     GLFW_INCLUDE_VULKAN
 )
-target_include_directories(
-    ${PROJECT_NAME} SYSTEM PRIVATE
-    ${GLFW_INCLUDE_DIRS}
-)
-target_link_libraries(
-    ${PROJECT_NAME} PRIVATE
-    ${GLFW_LIBRARIES}
-)
+target_link_libraries(program glfw)
 
 find_package(Vulkan REQUIRED)
-target_include_directories(
-    ${PROJECT_NAME} SYSTEM PRIVATE
-    ${Vulkan_INCLUDE_DIRS}
-)
-target_link_libraries(
-    ${PROJECT_NAME} PRIVATE
-    ${Vulkan_LIBRARIES}
-)
+target_link_libraries(program Vulkan::Vulkan)
