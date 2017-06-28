@@ -1,12 +1,10 @@
 #ifndef GUDVIN_INCLUDED_VK_INSTANCE
 #define GUDVIN_INCLUDED_VK_INSTANCE
 
-#include "handle.hxx"
 #include "result.hxx"
+#include "handle.hxx"
 
 #include <vulkan/vulkan.h>
-
-#include <cassert>
 
 namespace gudvin::vk {
 ///////////////////////////////////////////////////////////////////////////////
@@ -14,14 +12,11 @@ namespace gudvin::vk {
 inline
 auto create_instance(
     VkInstanceCreateInfo const* info,
-    VkAllocationCallbacks const* allocator,
-    handle<VkInstance>* instance)
+    VkAllocationCallbacks const* allocator)
 {
-    assert(instance);
-    VkInstance raw_instance;
-    auto result = check(vkCreateInstance(info, allocator, &raw_instance));
-    instance->reset(raw_instance);
-    return result;
+    VkInstance instance;
+    check(vkCreateInstance(info, allocator, &instance));
+    return handle<VkInstance>(instance);
 }
 
 inline

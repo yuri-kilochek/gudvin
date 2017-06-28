@@ -44,15 +44,14 @@ namespace gudvin {
 
         VkInstanceCreateInfo info{VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO};
         //info.enabled_layer_names.emplace("foobaf");
-        vk::handle<VkInstance> instance;
-        vk::create_instance(&info, nullptr, &instance);
+        auto instance = vk::create_instance(&info, nullptr);
         scope_guard instance_guard = [&]{
             vk::destroy_instance(instance, nullptr);
         };
 
         glm::mat4 matrix;
         glm::vec4 vec;
-        auto test = matrix * vec;
+        vec * matrix;
 
         while(!glfwWindowShouldClose(window)) {
             glfwPollEvents();
