@@ -41,9 +41,8 @@ struct handle
     : handle()
     { swap(*this, other); }
 
-    auto operator=(handle other)
+    auto& operator=(handle other)
     noexcept
-    -> auto&
     {
         swap(*this, other);
         return *this;
