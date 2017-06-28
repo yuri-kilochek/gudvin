@@ -57,6 +57,7 @@ struct scope_guard_ok
     using detail::scope_guard::base<Params...>::base;
 
     ~scope_guard_ok()
+    noexcept(false)
     {
         int out_count = std::uncaught_exceptions();
         if (out_count == in_count) { this->invoke(); }
