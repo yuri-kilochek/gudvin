@@ -8,6 +8,7 @@
 #include "vk/enumerate_instance_layer_properties.hxx"
 #include "vk/enumerate_instance_extension_properties.hxx"
 #include "vk/instance.hxx"
+#include "vk/enumerate_physical_devices.hxx"
 #include "vk/handle.hxx"
 #include "scope_guard.hxx"
 
@@ -43,11 +44,15 @@ namespace gudvin {
         }
 
         VkInstanceCreateInfo info{VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO};
-        //info.enabled_layer_names.emplace("foobaf");
         auto instance = vk::create_instance(&info, nullptr);
         scope_guard instance_guard = [&]{
             vk::destroy_instance(instance, nullptr);
         };
+
+        std::cout << "physical devices:\n";
+        for (auto physical_device : vk::enumerate_physical_devices(instance.value())) {
+            std::cout << "xx\n";
+        }
 
         glm::mat4 matrix;
         glm::vec4 vec;
