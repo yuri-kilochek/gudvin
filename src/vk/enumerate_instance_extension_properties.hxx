@@ -7,13 +7,12 @@
 
 #include <vector>
 #include <cstdint>
-#include <string>
 
 namespace gudvin::vk {
 ///////////////////////////////////////////////////////////////////////////////
 
 inline
-auto enumerate_instance_extension_properties(char const* layer_name = nullptr)
+auto enumerate_instance_extension_properties(char const* layer_name)
 -> std::vector<VkExtensionProperties>
 {
     std::uint32_t item_count;
@@ -25,10 +24,6 @@ auto enumerate_instance_extension_properties(char const* layer_name = nullptr)
     items.resize(item_count);
     return items;
 }
-
-inline
-auto enumerate_instance_extension_properties(std::string const& layer_name)
-{ return enumerate_instance_extension_properties(layer_name.data()); }
 
 ///////////////////////////////////////////////////////////////////////////////
 } // gudvin::vk

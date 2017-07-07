@@ -30,7 +30,7 @@ namespace gudvin {
         scope_guard window_guard = [&]{ glfwDestroyWindow(window); };
 
         std::cout << "core extensions:" << "\n";
-        for (auto&& extension : vk::enumerate_instance_extension_properties()) {
+        for (auto&& extension : vk::enumerate_instance_extension_properties(nullptr)) {
             std::cout << "\t" << extension.extensionName << "\n";
         }
         std::cout << "layers:" << "\n";
