@@ -1,8 +1,8 @@
 #ifndef GUDVIN_INCLUDED_VK_INSTANCE
 #define GUDVIN_INCLUDED_VK_INSTANCE
 
-#include "result.hxx"
 #include "handle.hxx"
+#include "result.hxx"
 
 #include <vulkan/vulkan.h>
 
@@ -13,10 +13,11 @@ inline
 auto create_instance(
     VkInstanceCreateInfo const* info,
     VkAllocationCallbacks const* allocator)
+-> handle<VkInstance>
 {
-    VkInstance instance;
-    check(vkCreateInstance(info, allocator, &instance));
-    return handle<VkInstance>(instance);
+    VkInstance handle_value;
+    check(vkCreateInstance(info, allocator, &handle_value));
+    return handle(handle_value);
 }
 
 inline

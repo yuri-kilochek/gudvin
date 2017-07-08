@@ -10,13 +10,13 @@
 namespace gudvin::vk {
 ///////////////////////////////////////////////////////////////////////////////
 
-template <typename Value>
+template <typename ValueType>
 struct handle
 {
-    using value_type = Value;
+    using value_type = ValueType;
 
     explicit
-    handle(Value value)
+    handle(value_type value)
     noexcept
     : value_(value)
     {}
@@ -64,13 +64,13 @@ struct handle
     auto reset(Args&&... args)
     noexcept
     { 
-        auto value = std::exchange(value_, Value(VK_NULL_HANDLE));
+        auto value = std::exchange(value_, value_type(VK_NULL_HANDLE));
         *this = handle(std::forward<Args>(args)...);
         return value;
     }
 
 private:
-    Value value_;
+    value_type value_;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
