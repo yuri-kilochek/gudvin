@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.8)
 
+include("${CMAKE_CURRENT_SOURCE_DIR}/config.cmake" OPTIONAL)
+
 project(gudvin VERSION 0.0.0)
 
 add_executable(program
@@ -16,19 +18,6 @@ set_target_properties(program PROPERTIES
     CXX_STANDARD_REQUIRED YES
     CXX_EXTENSIONS OFF
 )
-
-if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
-    target_compile_options(program PRIVATE
-        -Wall
-        -Wextra
-        -pedantic
-        -Wfatal-errors
-    )
-elseif(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
-    target_compile_options(program PRIVATE
-        /Wall
-    )
-endif()
 
 configure_file("src/config.hxx.in" "src/config.hxx")
 target_include_directories(program PUBLIC "${CMAKE_BINARY_DIR}/src")
