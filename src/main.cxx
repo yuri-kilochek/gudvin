@@ -9,26 +9,30 @@
 #include "vk/enumerate_instance_extension_properties.hxx"
 #include "vk/instance.hxx"
 #include "vk/enumerate_physical_devices.hxx"
-#include "vk/handle.hxx"
+#include "vk/device.hxx"
 #include "scope_guard.hxx"
+#include "glfw/error.hxx"
 
 namespace gudvin {
     void main()
     {
         std::cout << "gudvin v" << GUDVIN_VERSION_MAJOR << "." << GUDVIN_VERSION_MINOR << "." << GUDVIN_VERSION_PATCH << "\n";
 
-        if (!glfwInit()) {
-            throw new std::runtime_error("glfwInit() failed");
-        }
-        scope_guard glfw_guard = [&]{ glfwTerminate(); };
+        if (!glfwInit()) { glfw::check_error(); }
+        scope_guard glfw_guard = [&]{
+            glfwTerminate();
+            glfw::suppress_error();
+        };
 
         glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-        auto const window = glfwCreateWindow(
-            800, 600, "Vulkan window", nullptr, nullptr);
-        if (!window) {
-            throw new std::runtime_error("glfwCreateWindow() failed");
-        }
-        scope_guard window_guard = [&]{ glfwDestroyWindow(window); };
+        glfw::check_error();
+        auto const window =
+            glfwCreateWindow(800, 600, "gudvin", nullptr, nullptr);
+        if (!window) { glfw::check_error(); }
+        scope_guard window_guard = [&]{
+            glfwDestroyWindow(window);
+            glfw::suppress_error();
+        };
 
         std::cout << "core extensions:" << "\n";
         for (auto&& extension : vk::enumerate_instance_extension_properties(nullptr)) {
@@ -51,16 +55,21 @@ namespace gudvin {
 
         std::cout << "physical devices:\n";
         for (auto physical_device : vk::enumerate_physical_devices(instance.value())) {
-            std::cout << "xx\n";
+            VkPhysicalDeviceProperties properties;
+            vkGetPhysicalDeviceProperties(physical_device, &properties);
+            std::cout << "\t" << properties.deviceName << "\n";
         }
 
         glm::mat4 matrix;
         glm::vec4 vec;
         vec * matrix;
 
-        while(!glfwWindowShouldClose(window)) {
+        while (!glfwWindowShouldClose(window)) {
+            glfw::check_error();
             glfwPollEvents();
+            glfw::check_error();
         }
+        glfw::check_error();
     }
 } /* namespace gudvin */
 
