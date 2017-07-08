@@ -5,7 +5,7 @@
 
 #include <utility>
 #include <exception>
-#include <type_traits>
+#include <cassert>
 
 namespace gudvin::vk {
 ///////////////////////////////////////////////////////////////////////////////
