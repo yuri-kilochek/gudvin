@@ -33,6 +33,9 @@ endif()
 configure_file("src/config.hxx.in" "src/config.hxx")
 target_include_directories(program PRIVATE "${CMAKE_BINARY_DIR}/src")
 
+find_package(Threads REQUIRED)
+target_link_libraries(program Threads::Threads)
+
 find_package(Boost REQUIRED)
 target_link_libraries(program Boost::boost)
 
