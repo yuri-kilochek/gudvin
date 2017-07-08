@@ -59,6 +59,10 @@ struct handle
     const noexcept
     { return value_; }
 
+    operator value_type()
+    const noexcept
+    { return value_; }
+
     template <typename... Args, std::enable_if_t<
         std::is_constructible_v<handle, Args...>>*...>
     auto reset(Args&&... args)
