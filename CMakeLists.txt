@@ -20,6 +20,7 @@ set_target_properties(program PROPERTIES
 if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     target_compile_options(program PRIVATE
         -Wall
+        -Wextra
         -pedantic
         -Wfatal-errors
     )
