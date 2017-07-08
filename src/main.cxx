@@ -5,12 +5,11 @@
 #include <glm/glm.hpp>
 
 #include "config.hxx"
+#include "scope_guard.hxx"
 #include "vk/enumerate_instance_layer_properties.hxx"
 #include "vk/enumerate_instance_extension_properties.hxx"
 #include "vk/instance.hxx"
 #include "vk/enumerate_physical_devices.hxx"
-#include "vk/device.hxx"
-#include "scope_guard.hxx"
 #include "glfw/error.hxx"
 
 namespace gudvin {

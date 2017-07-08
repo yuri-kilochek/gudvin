@@ -2,7 +2,7 @@
 #define GUDVIN_INCLUDED_VK_INSTANCE
 
 #include "handle.hxx"
-#include "result.hxx"
+#include "error.hxx"
 
 #include <vulkan/vulkan.h>
 

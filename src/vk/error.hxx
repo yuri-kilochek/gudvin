@@ -1,28 +1,18 @@
-#ifndef GUDVIN_INCLUDED_VK_RESULT
-#define GUDVIN_INCLUDED_VK_RESULT
+#ifndef GUDVIN_INCLUDED_VK_ERROR
+#define GUDVIN_INCLUDED_VK_ERROR
 
 #include <vulkan/vulkan.h>
+#include <boost/config.hpp>
 
 #include <system_error>
 #include <stdexcept>
 #include <string>
 
-namespace std {
-///////////////////////////////////////////////////////////////////////////////
-
-template <>
-struct is_error_code_enum<::VkResult>
-: true_type
-{};
-
-///////////////////////////////////////////////////////////////////////////////
-} // std
-
 namespace gudvin::vk {
 ///////////////////////////////////////////////////////////////////////////////
 
 inline
-auto result_category()
+auto error_category()
 noexcept
 -> std::error_category const&
 {
@@ -35,12 +25,12 @@ noexcept
         override final
         { return "vulkan"; }
 
-        auto message(int result)
+        auto message(int value)
         const
         -> std::string
         override final
         {
-            switch (result) {
+            switch (value) {
                 case VK_ERROR_OUT_OF_HOST_MEMORY:
                     return "out of host memory";
                 case VK_ERROR_OUT_OF_DEVICE_MEMORY:
@@ -83,16 +73,16 @@ noexcept
                     return "invalid external handle";
                 default:
                     throw std::domain_error(
-                        "unknown error code: " + std::to_string(result)); 
+                        "unknown error code: " + std::to_string(value)); 
             }
         }
 
-        auto default_error_condition(int result)
+        auto default_error_condition(int value)
         const noexcept
         -> std::error_condition
         override final
         {
-            switch (result) {
+            switch (value) {
                 case VK_ERROR_OUT_OF_HOST_MEMORY:
                 case VK_ERROR_OUT_OF_DEVICE_MEMORY:
                     return std::errc::not_enough_memory;
@@ -111,36 +101,32 @@ noexcept
                 case VK_ERROR_INVALID_EXTERNAL_HANDLE_KHX:
                     return std::errc::invalid_argument;
                 default:
-                    return error_category::default_error_condition(result);
+                    return error_category::default_error_condition(value);
             }
         }
     } const instance;
     return instance;
 }
 
-///////////////////////////////////////////////////////////////////////////////
-} // gudvin::vk
-
 inline
 auto make_error_code(VkResult result)
 noexcept
 -> std::error_code
-{ return {result, gudvin::vk::result_category()}; }
+{ return {result, error_category()}; }
 
 inline
 auto make_error_condition(VkResult result)
 noexcept
 -> std::error_condition
-{ return {result, gudvin::vk::result_category()}; }
-
-namespace gudvin {
-///////////////////////////////////////////////////////////////////////////////
+{ return {result, error_category()}; }
 
 inline
 auto check(VkResult result)
 -> VkResult
 {
-    if (result < 0) { throw std::system_error(result); }
+    if (BOOST_UNLIKELY(result < 0)) {
+        throw std::system_error(result, error_category());
+    }
     return result;
 }
 

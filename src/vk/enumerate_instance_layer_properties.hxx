@@ -1,7 +1,7 @@
 #ifndef GUDVIN_INCLUDED_VK_ENUMERATE_INSTANCE_LAYER_PROPERTIES
 #define GUDVIN_INCLUDED_VK_ENUMERATE_INSTANCE_LAYER_PROPERTIES
 
-#include "result.hxx"
+#include "error.hxx"
 
 #include <vulkan/vulkan.h>
 
