@@ -49,7 +49,7 @@ struct handle
     }
 
     ~handle()
-    { if (value_) { std::terminate(); } }
+    { assert(!value_); }
 
     explicit operator bool()
     const noexcept
