@@ -44,6 +44,7 @@ target_link_libraries(program glm)
 
 find_package(glfw3 REQUIRED)
 target_compile_definitions(program PUBLIC
+    GLFW_INCLUDE_NONE
     GLFW_INCLUDE_VULKAN
 )
 target_link_libraries(program glfw)
